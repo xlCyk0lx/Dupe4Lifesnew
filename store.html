@@ -12,6 +12,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Add Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Add styles for the BETA rank */
+        .beta {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .free-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #27ae60;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(0deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
     <div class="particles-container" id="particles-js"></div>
@@ -50,6 +70,25 @@
             </div>
 
             <div class="store-items">
+                <!-- BETA Rank (Free) -->
+                <div class="store-item">
+                    <div class="item-header beta">
+                        <h2>BETA Rank</h2>
+                        <span class="free-tag">FREE</span>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-price">$0.00</div>
+                        <ul class="item-features">
+                            <li><i class="fas fa-check"></i> BETA tag in chat</li>
+                            <li><i class="fas fa-check"></i> 1 extra player home</li>
+                            <li><i class="fas fa-check"></i> Basic colored chat</li>
+                            <li><i class="fas fa-check"></i> Early access to new features</li>
+                            <li><i class="fas fa-check"></i> 1x /dupe command usage</li>
+                        </ul>
+                        <button class="minecraft-btn blue buy-button" data-rank="beta" data-price="0">Get BETA</button>
+                    </div>
+                </div>
+
                 <!-- VIP Rank -->
                 <div class="store-item">
                     <div class="item-header vip">
@@ -112,7 +151,7 @@
             <!-- Payment Modal -->
             <div id="payment-modal" class="modal">
                 <div class="modal-content">
-                    <span class="close-modal">&times;</span>
+                    <span class="close-modal">×</span>
                     <h2>Complete Your Purchase</h2>
                     <div id="purchase-summary">
                         <p>Rank: <span id="summary-rank"></span></p>

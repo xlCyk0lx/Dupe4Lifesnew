@@ -112,7 +112,19 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Create payment intent on your server
             createPaymentIntent(selectedRank, selectedPrice, username)
                 .then(clientSecret => {
-                    // Confirm the payment with Stripe.js
+                    // For the free BETA rank
+                    if (selectedRank === 'beta' && selectedPrice === '0') {
+                        return stripe.confirmCardSetup(clientSecret, {
+                            payment_method: {
+                                card: card,
+                                billing_details: {
+                                    name: username
+                                }
+                            }
+                        });
+                    }
+            
+                    // For paid ranks
                     return stripe.confirmCardPayment(clientSecret, {
                         payment_method: {
                             card: card,
@@ -127,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         // Show error to your customer
                         showError(result.error.message);
                     } else {
-                        // The payment succeeded!
+                        // The payment or setup succeeded!
                         handleSuccessfulPayment(username, selectedRank);
                     }
                 })
@@ -145,7 +157,31 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Function to create a payment intent on your server
 async function createPaymentIntent(rank, price, username) {
     try {
-        const response = await fetch('/api/create-payment-intent.js', {
+        // For the free BETA rank, we'll use a special endpoint
+        if (rank === 'beta' && price === '0') {
+            // This would normally verify the card without charging
+            const response = await fetch('/api/create-setup-intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    rank: rank,
+                    username: username
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            return data.clientSecret;
+        }
+        
+        // Regular payment intent for paid ranks
+        const response = await fetch('/api/create-payment-intent', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

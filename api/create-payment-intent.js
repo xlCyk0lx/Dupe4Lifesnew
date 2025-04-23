@@ -1,43 +1,59 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports = async (req, res) => {
-  // Add CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
   try {
-    const { rank, amount, username } = req.body;
-    
-    // Validate inputs
-    if (!rank || !amount || !username) {
-      return res.status(400).json({ error: 'Missing required parameters' });
-    }
-    
-    console.log(`Creating payment intent for ${username}, rank: ${rank}, amount: ${amount}`);
-    
-    // Create a PaymentIntent with the order amount and currency
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: parseInt(amount),
-      currency: 'usd',
-      metadata: {
-        rank: rank,
-        username: username
+      // Enable CORS
+      res.setHeader('Access-Control-Allow-Credentials', true);
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+      res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+        
+      // Handle OPTIONS request for CORS preflight
+      if (req.method === 'OPTIONS') {
+          return res.status(200).end();
       }
-    });
-    
-    console.log('Payment intent created successfully');
-    res.status(200).json({ clientSecret: paymentIntent.client_secret });
+        
+      // Only allow POST requests
+      if (req.method !== 'POST') {
+          return res.status(405).json({ error: 'Method not allowed' });
+      }
+        
+      // Parse request body
+      const { username, rank, amount } = req.body;
+        
+      if (!username || !rank || amount === undefined) {
+          return res.status(400).json({ error: 'Missing required fields' });
+      }
+        
+      // If this is the BETA rank with $0, redirect to setup intent
+      if (rank === 'beta' && parseInt(amount) === 0) {
+          return res.status(400).json({ 
+              error: 'Free ranks should use the setup intent endpoint' 
+          });
+      }
+        
+      // Load environment variables
+      const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+        
+      // Create a PaymentIntent
+      const paymentIntent = await stripe.paymentIntents.create({
+          amount: parseInt(amount),
+          currency: 'usd',
+          metadata: {
+              username: username,
+              rank: rank
+          }
+      });
+        
+      // Return the client secret
+      return res.status(200).json({
+          clientSecret: paymentIntent.client_secret
+      });
   } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).json({ error: 'An error occurred while processing your payment' });
+      console.error('Payment intent error:', error);
+        
+      return res.status(500).json({
+          error: 'Failed to create payment intent'
+      });
   }
 };
