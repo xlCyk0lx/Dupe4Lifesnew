@@ -1,41 +1,49 @@
-// API endpoint for admin login
-exports.handler = async function(event, context) {
-  try {
+module.exports = (req, res) => {
+    // Enable CORS
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+    
+    // Handle OPTIONS request for CORS preflight
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+    
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+    
+    try {
       // Parse request body
-      const body = JSON.parse(event.body);
-      const { username, password } = body;
-        
-      // Simple authentication (in a real app, you'd use a database and proper password hashing)
-      // This is just a placeholder for demonstration
+      const { username, password } = req.body;
+      
+      // Simple authentication
       if (username === 'admin' && password === 'dupe4lifes') {
-          // Generate a simple token (in a real app, use JWT or similar)
-          const token = Buffer.from(`${username}:${Date.now()}`).toString('base64');
-            
-          return {
-              statusCode: 200,
-              body: JSON.stringify({
-                  success: true,
-                  token: token
-              })
-          };
+        // Generate a simple token
+        const token = Buffer.from(`${username}:${Date.now()}`).toString('base64');
+        
+        return res.status(200).json({
+          success: true,
+          token: token
+        });
       }
-        
-      return {
-          statusCode: 401,
-          body: JSON.stringify({
-              success: false,
-              error: 'Invalid username or password'
-          })
-      };
-  } catch (error) {
+      
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid username or password'
+      });
+    } catch (error) {
       console.error('Login error:', error);
-        
-      return {
-          statusCode: 500,
-          body: JSON.stringify({
-              success: false,
-              error: 'Internal server error'
-          })
-      };
-  }
-};
+      
+      return res.status(500).json({
+        success: false,
+        error: 'Internal server error'
+      });
+    }
+  };
+
+  
+
+  
