@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - DUPE4LIFES Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .admin-sidebar {
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px 0;
+            border-right: 1px solid var(--primary-color);
+        }
+        
+        .admin-logo {
+            text-align: center;
+            padding: 0 20px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        
+        .admin-logo h2 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .admin-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .admin-nav li {
+            margin-bottom: 5px;
+        }
+        
+        .admin-nav a {
+            display: block;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-nav a:hover, .admin-nav a.active {
+            background-color: rgba(255, 0, 0, 0.2);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .admin-nav i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .admin-content {
+            flex: 1;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-header h1 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .admin-user span {
+            margin-right: 10px;
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px solid var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .settings-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: white;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-right: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .settings-tab:hover {
+            color: var(--accent-color);
+        }
+        
+        .settings-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .settings-section {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        
+        .settings-section.active {
+            display: block;
+        }
+        
+        .settings-section h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 4px;
+            color: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-right: 10px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:focus + .toggle-slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-label {
+            font-weight: bold;
+        }
+        
+        .save-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .save-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .save-btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .alert-danger {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+            border: 1px solid rgba(255, 152, 0, 0.5);
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .price-table th, .price-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .price-table th {
+            color: var(--accent-color);
+        }
+        
+        .price-input {
+            width: 100px !important;
+            display: inline-block;
+        }
+        
+        .price-prefix {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>DUPE4LIFES</h2>
+                <small>Admin Panel</small>
+            </div>
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="payments.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+                    <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="admin-content">
+            <div class="admin-header">
+                <h1>Settings</h1>
+                <div class="admin-user">
+                    <span id="admin-username">Admin</span>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+            
+            <div id="alert-container"></div>
+            
+            <div class="settings-tabs">
+                <button class="settings-tab active" data-tab="payment-settings">Payment Settings</button>
+                <button class="settings-tab" data-tab="store-settings">Store Settings</button>
+                <button class="settings-tab" data-tab="account-settings">Account Settings</button>
+            </div>
+            
+            <!-- Payment Settings Section -->
+            <div id="payment-settings" class="settings-section active">
+                <h2>Payment Settings</h2>
+                
+                <form id="payment-settings-form">
+                    <div class="form-group toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="test-mode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">Test Mode</span>
+                        <small style="margin-left: 10px; color: rgba(255, 255, 255, 0.7);">
+                            Enable to use Stripe test environment
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="test-publishable-key">Test Publishable Key</label>
+                        <input type="text" id="test-publishable-key" placeholder="pk_test_...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="test-secret-key">Test Secret Key</label>
+                        <input type="password" id="test-secret-key" placeholder="sk_test_...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="live-publishable-key">Live Publishable Key</label>
+                        <input type="text" id="live-publishable-key" placeholder="pk_live_...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="live-secret-key">Live Secret Key</label>
+                        <input type="password" id="live-secret-key" placeholder="sk_live_...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency">
+                            <option value="usd">USD ($)</option>
+                            <option value="eur">EUR (€)</option>
+                            <option value="gbp">GBP (£)</option>
+                            <option value="cad">CAD ($)</option>
+                            <option value="aud">AUD ($)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="save-btn">Save Payment Settings</button>
+                </form>
+            </div>
+            
+            <!-- Store Settings Section -->
+            <div id="store-settings" class="settings-section">
+                <h2>Store Settings</h2>
+                
+                <form id="store-settings-form">
+                    <div class="form-group">
+                        <label>Rank Prices</label>
+                        <table class="price-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Price</th>
+                                    <th>Enabled</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VIP Rank</td>
+                                    <td>
+                                        <span class="price-prefix">$</span>
+                                        <input type="number" id="vip-price" class="price-input" min="0" step="0.01">
+                                    </td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="vip-enabled">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MVP Rank</td>
+                                    <td>
+                                        <span class="price-prefix">$</span>
+                                        <input type="number" id="mvp-price" class="price-input" min="0" step="0.01">
+                                    </td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="mvp-enabled">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>LEGEND Rank</td>
+                                    <td>
+                                        <span class="price-prefix">$</span>
+                                        <input type="number" id="legend-price" class="price-input" min="0" step="0.01">
+                                    </td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="legend-enabled">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="form-group toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="store-enabled">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">Enable Store</span>
+                        <small style="margin-left: 10px; color: rgba(255, 255, 255, 0.7);">
+                            Turn off to show "Coming Soon" page
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="minecraft-server">Minecraft Server Address</label>
+                        <input type="text" id="minecraft-server" placeholder="e.g., Dupe4lifes.minehut.gg">
+                        <small style="color: rgba(255, 255, 255, 0.7);">
+                            Used for applying ranks to players
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rcon-port">RCON Port</label>
+                        <input type="number" id="rcon-port" placeholder="e.g., 25575">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rcon-password">RCON Password</label>
+                        <input type="password" id="rcon-password" placeholder="RCON password">
+                    </div>
+                    
+                    <button type="submit" class="save-btn">Save Store Settings</button>
+                </form>
+            </div>
+            
+            <!-- Account Settings Section -->
+            <div id="account-settings" class="settings-section">
+                <h2>Account Settings</h2>
+                
+                <form id="account-settings-form">
+                    <div class="form-group">
+                        <label for="admin-user">Admin Username</label>
+                        <input type="text" id="admin-user" placeholder="Username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" placeholder="Current password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" placeholder="New password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" placeholder="Confirm new password">
+                    </div>
+                    
+                    <button type="submit" class="save-btn">Update Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = '/panel/login.html';
+                return;
+            }
+            
+            // Set admin username
+            document.getElementById('admin-username').textContent = 'xlCyk0l';
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('adminToken');
+                window.location.href = '/panel/login.html';
+            });
+            
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.settings-tab');
+            const sections = document.querySelectorAll('.settings-section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show active section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === tabId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Load settings data
+            loadSettings();
+            
+            // Form submission handlers
+            document.getElementById('payment-settings-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                savePaymentSettings();
+            });
+            
+            document.getElementById('store-settings-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStoreSettings();
+            });
+            
+            document.getElementById('account-settings-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveAccountSettings();
+            });
+        });
+        
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/panel/settings.js', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch settings');
+                }
+                
+                const data = await response.json();
+                
+                // Populate payment settings
+                document.getElementById('test-mode').checked = data.payment.testMode;
+                document.getElementById('test-publishable-key').value = data.payment.testPublishableKey || '';
+                document.getElementById('test-secret-key').value = data.payment.testSecretKey ? '••••••••••••••••' : '';
+                document.getElementById('live-publishable-key').value = data.payment.livePublishableKey || '';
+                document.getElementById('live-secret-key').value = data.payment.liveSecretKey ? '••••••••••••••••' : '';
+                document.getElementById('currency').value = data.payment.currency || 'usd';
+                
+                // Populate store settings
+                document.getElementById('vip-price').value = (data.store.ranks.vip.price / 100).toFixed(2);
+                document.getElementById('vip-enabled').checked = data.store.ranks.vip.enabled;
+                document.getElementById('mvp-price').value = (data.store.ranks.mvp.price / 100).toFixed(2);
+                document.getElementById('mvp-enabled').checked = data.store.ranks.mvp.enabled;
+                document.getElementById('legend-price').value = (data.store.ranks.legend.price / 100).toFixed(2);
+                document.getElementById('legend-enabled').checked = data.store.ranks.legend.enabled;
+                document.getElementById('store-enabled').checked = data.store.enabled;
+                document.getElementById('minecraft-server').value = data.store.minecraftServer || '';
+                document.getElementById('rcon-port').value = data.store.rconPort || '';
+                document.getElementById('rcon-password').value = data.store.rconPassword ? '••••••••••••••••' : '';
+                
+                // Populate account settings
+                document.getElementById('admin-user').value = data.account.username || '';
+                
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                showAlert('Failed to load settings. Please try refreshing the page.', 'danger');
+            }
+        }
+        
+        async function savePaymentSettings() {
+            try {
+                const testMode = document.getElementById('test-mode').checked;
+                const testPublishableKey = document.getElementById('test-publishable-key').value.trim();
+                const testSecretKey = document.getElementById('test-secret-key').value.trim();
+                const livePublishableKey = document.getElementById('live-publishable-key').value.trim();
+                const liveSecretKey = document.getElementById('live-secret-key').value.trim();
+                const currency = document.getElementById('currency').value;
+                
+                // Validate inputs
+                if (testMode && (!testPublishableKey || testSecretKey === '••••••••••••••••')) {
+                    showAlert('Please provide valid test API keys when test mode is enabled.', 'warning');
+                    return;
+                }
+                
+                if (!testMode && (!livePublishableKey || liveSecretKey === '••••••••••••••••')) {
+                    showAlert('Please provide valid live API keys when test mode is disabled.', 'warning');
+                    return;
+                }
+                
+                // Prepare data for submission
+                const paymentSettings = {
+                    testMode,
+                    testPublishableKey,
+                    currency
+                };
+                
+                // Only include secret keys if they've been changed
+                if (testSecretKey && testSecretKey !== '••••••••••••••••') {
+                    paymentSettings.testSecretKey = testSecretKey;
+                }
+                
+                if (livePublishableKey) {
+                    paymentSettings.livePublishableKey = livePublishableKey;
+                }
+                
+                if (liveSecretKey && liveSecretKey !== '••••••••••••••••') {
+                    paymentSettings.liveSecretKey = liveSecretKey;
+                }
+                
+                // Submit data
+                const response = await fetch('/api/panel/settings/payment.js', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(paymentSettings)
+                });
+                
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Failed to save payment settings');
+                }
+                
+                showAlert('Payment settings saved successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving payment settings:', error);
+                showAlert(error.message || 'Failed to save payment settings.', 'danger');
+            }
+        }
+        
+        async function saveStoreSettings() {
+            try {
+                const vipPrice = parseFloat(document.getElementById('vip-price').value) * 100;
+                const vipEnabled = document.getElementById('vip-enabled').checked;
+                const mvpPrice = parseFloat(document.getElementById('mvp-price').value) * 100;
+                const mvpEnabled = document.getElementById('mvp-enabled').checked;
+                const legendPrice = parseFloat(document.getElementById('legend-price').value) * 100;
+                const legendEnabled = document.getElementById('legend-enabled').checked;
+                const storeEnabled = document.getElementById('store-enabled').checked;
+                const minecraftServer = document.getElementById('minecraft-server').value.trim();
+                const rconPort = document.getElementById('rcon-port').value.trim();
+                const rconPassword = document.getElementById('rcon-password').value.trim();
+                
+                // Validate inputs
+                if (isNaN(vipPrice) || isNaN(mvpPrice) || isNaN(legendPrice)) {
+                    showAlert('Please enter valid prices for all ranks.', 'warning');
+                    return;
+                }
+                
+                if (storeEnabled && !minecraftServer) {
+                    showAlert('Please provide a Minecraft server address when the store is enabled.', 'warning');
+                    return;
+                }
+                
+                // Prepare data for submission
+                const storeSettings = {
+                    ranks: {
+                        vip: { price: vipPrice, enabled: vipEnabled },
+                        mvp: { price: mvpPrice, enabled: mvpEnabled },
+                        legend: { price: legendPrice, enabled: legendEnabled }
+                    },
+                    enabled: storeEnabled,
+                    minecraftServer,
+                    rconPort
+                };
+                
+                // Only include RCON password if it's been changed
+                if (rconPassword && rconPassword !== '••••••••••••••••') {
+                    storeSettings.rconPassword = rconPassword;
+                }
+                
+                // Submit data
+                const response = await fetch('/api/panel/settings/store.js', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(storeSettings)
+                });
+                
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Failed to save store settings');
+                }
+        
+                showAlert('Store settings saved successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving store settings:', error);
+                showAlert(error.message || 'Failed to save store settings.', 'danger');
+            }
+        }
+        
+        async function saveAccountSettings() {
+            try {
+                const username = document.getElementById('admin-user').value.trim();
+                const currentPassword = document.getElementById('current-password').value.trim();
+                const newPassword = document.getElementById('new-password').value.trim();
+                const confirmPassword = document.getElementById('confirm-password').value.trim();
+                
+                // Validate inputs
+                if (!username) {
+                    showAlert('Please enter a username.', 'warning');
+                    return;
+                }
+                
+                if (!currentPassword) {
+                    showAlert('Please enter your current password.', 'warning');
+                    return;
+                }
+                
+                if (newPassword && newPassword !== confirmPassword) {
+                    showAlert('New passwords do not match.', 'warning');
+                    return;
+                }
+                
+                // Prepare data for submission
+                const accountSettings = {
+                    username,
+                    currentPassword
+                };
+                
+                if (newPassword) {
+                    accountSettings.newPassword = newPassword;
+                }
+                
+                // Submit data
+                const response = await fetch('/api/panel/settings/account.js', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(accountSettings)
+                });
+                
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Failed to save account settings');
+                }
+                
+                // Clear password fields
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+                
+                // Update displayed username
+                document.getElementById('admin-username').textContent = username;
+                
+                showAlert('Account settings updated successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving account settings:', error);
+                showAlert(error.message || 'Failed to save account settings.', 'danger');
+            }
+        }
+        
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            
+            // Remove any existing alerts
+            alertContainer.innerHTML = '';
+            
+            // Create new alert
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            // Add close button
+            const closeBtn = document.createElement('span');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.float = 'right';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.style.fontWeight = 'bold';
+            closeBtn.addEventListener('click', function() {
+                alert.style.display = 'none';
+            });
+            
+            alert.prepend(closeBtn);
+            alertContainer.appendChild(alert);
+            
+            // Auto-hide after 5 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
