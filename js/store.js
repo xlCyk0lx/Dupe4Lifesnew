@@ -6,12 +6,27 @@ let selectedPrice;
 
 document.addEventListener('DOMContentLoaded', async function() {
     try {
+        console.log('Initializing payment system...');
+        
         // Fetch the publishable key from the server
-        const response = await fetch('/api/config');
+        const response = await fetch('/api/config.js');
+        console.log('Config response:', response);
+        
+        if (!response.ok) {
+            throw new Error(`Config API returned ${response.status}: ${response.statusText}`);
+        }
+        
         const { publishableKey } = await response.json();
+        console.log('Publishable key received (hidden):', '***');
+        
+        if (!publishableKey) {
+            throw new Error('No publishable key returned from server');
+        }
         
         // Initialize Stripe with the publishable key
+        console.log('Initializing Stripe...');
         stripe = Stripe(publishableKey);
+        console.log('Stripe initialized successfully');
         
         // Set up Stripe card element
         const elements = stripe.elements();
@@ -130,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Function to create a payment intent on your server
 async function createPaymentIntent(rank, price, username) {
     try {
-        const response = await fetch('/api/create-payment-intent', {
+        const response = await fetch('/api/create-payment-intent.js', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -160,7 +175,7 @@ async function createPaymentIntent(rank, price, username) {
 async function handleSuccessfulPayment(username, rank) {
     try {
         // Call your server to record the successful payment
-        const response = await fetch('/api/apply-rank', {
+        const response = await fetch('/api/apply-rank.js', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
