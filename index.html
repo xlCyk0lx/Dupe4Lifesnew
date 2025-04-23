@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUPE4LIFES - Lifesteal Dupe Minecraft Server</title>
+    <meta name="description" content="Join DUPE4LIFES Minecraft server for the best lifesteal and duplication experience!">
+    <meta name="og:description" content="Join DUPE4LIFES Minecraft server for the best lifesteal and duplication experience!">
+    <meta name="og:title" content="DUPE4LIFES - Lifesteal Dupe Minecraft Server">
+    <meta name="og:url" content="https://dupe4lifes.org">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="particles-container" id="particles-js"></div>
+    
+    <header>
+        <div class="logo">
+            <h1 class="server-title">DUPE4LIFES</h1>
+            <div class="server-ip">
+                <span>IP: </span>
+                <span id="server-ip">Dupe4lifes.minehut.gg</span>
+                <button id="copy-ip" onclick="copyIP()"><i class="fas fa-copy"></i></button>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="store.html">Store</a></li>
+                <li><a href="https://dc.gg/dupe4lifes" target="_blank">Discord</a></li>
+                <li><a href="portal.html">Portal</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to <span class="server-name">DUPE4LIFES</span></h1>
+                <p>The Ultimate Lifesteal Dupe Server</p>
+                <div class="cta-buttons">
+                    <a href="#" class="cta-button primary" onclick="copyIP()">
+                        <i class="fas fa-play"></i> Play Now
+                    </a>
+                    <a href="https://dc.gg/dupe4lifes" class="cta-button secondary" target="_blank">
+                        <i class="fab fa-discord"></i> Join Discord
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="server-info">
+            <h2>About Our Server</h2>
+            <div class="info-content">
+                <div class="info-text">
+                    <p>DUPE4LIFES is a minecraft server i created about <b>5 years Ago</b> thats is crazy to me i thank all my members for sticking with me</p>
+                    <p>Our server is a Lifesteal dupe what is a lifesteal dupe? its a server with a twist that is Lifesteal & Duplaction commands being /dupe</p>
+                    <p>This was one of the first Lifesteal dupe servers created inspired by <b>DupeKits</b></p>
+                    </p>
+                    <div class="info-features">
+                        <div class="info-feature">
+                            <i class="fas fa-heart"></i>
+                            <h3>Lifesteal</h3>
+                            <p>Kill other players to steal there hearts</p>
+                        </div>
+                        <div class="info-feature">
+                            <i class="fas fa-clone"></i>
+                            <h3>Duplication</h3>
+                            <p>Use the ingame command to dupelicate items using </p>
+                            <p> The /Dupe command </p>
+                        </div>
+                        <div class="info-feature">
+                            <i class="fas fa-users"></i>
+                            <h3>Community</h3>
+                            <p>Join a friendly and active player base</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-image">
+                    <!-- Server showcase image would go here -->
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Server Features</h2>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Lifesteal Mechanics</h3>
+                    <p>Gain hearts by defeating other players in combat. The more hearts you collect, the stronger you become!</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-clone"></i>
+                    <h3>Duplication Allowed</h3>
+                    <p>Unlike other servers, we allow duplication using the command /dupe!</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Teams</h3>
+                    <p>Join or create a team with friends to work together and dominate the server.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Low Performance</h3>
+                    <p>Play lag-free on our low-performance server with 1% uptime and unoptimized gameplay. <b><< joke</b></p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Active Staff</h3>
+                    <p>Our dedicated staff team is always ready to help with any issues and ensure a fair gaming environment.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Regular Events</h3>
+                    <p>Participate in exciting server events with awesome prizes and opportunities to showcase your skills.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="server-stats">
+            <h2>Server Statistics</h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Online Players</h3>
+                    <p id="player-count">Loading...</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-signal"></i>
+                    <h3>Server Status</h3>
+                    <p id="server-status">Checking...</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>Uptime</h3>
+                    <p>1% (joke)</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2 class="footer-server-title">DUPE4LIFES</h2>
+                <p>The ultimate Lifesteal Dupe experience</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="store.html">Store</a></li>
+                    <li><a href="https://discord.gg/yourlink" target="_blank">Discord</a></li>
+                    <li><a href="portal.html">Portal</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://discord.gg/yourlink" target="_blank"><i class="fab fa-discord"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 DUPE4LIFES. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
