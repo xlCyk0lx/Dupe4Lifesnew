@@ -1,0 +1,8 @@
+{
+  "name": "dupe4lifes",
+  "version": "1.0.0",
+  "description": "DUPE4LIFES Minecraft server website",
+  "dependencies": {
+    "stripe": "^12.0.0"
+  }
+}
