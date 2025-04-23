@@ -1,6 +1,6 @@
-import Stripe from 'stripe';
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Add CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -11,11 +11,10 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).end('Method Not Allowed');
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const { rank, amount, username } = req.body;
     
     // Validate inputs
@@ -41,4 +40,4 @@ export default async function handler(req, res) {
     console.error('Error creating payment intent:', error);
     res.status(500).json({ error: 'An error occurred while processing your payment' });
   }
-}
+};

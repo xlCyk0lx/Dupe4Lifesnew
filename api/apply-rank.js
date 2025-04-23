@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Add CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).end('Method Not Allowed');
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
@@ -20,7 +20,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
     
-    // Log the successful payment (we'll implement Minecraft integration later)
     console.log(`Successful payment: User ${username} purchased ${rank.toUpperCase()} rank`);
     
     res.status(200).json({ success: true, message: 'Payment recorded successfully' });
@@ -28,4 +27,4 @@ export default async function handler(req, res) {
     console.error('Error recording payment:', error);
     res.status(500).json({ error: 'An error occurred while recording the payment' });
   }
-}
+};
