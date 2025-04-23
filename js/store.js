@@ -157,9 +157,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Function to create a payment intent on your server
 async function createPaymentIntent(rank, price, username) {
     try {
+        console.log(`Creating payment intent for ${rank} rank, price: ${price}, username: ${username}`);
+        
         // For the free BETA rank, we'll use a special endpoint
         if (rank === 'beta' && price === '0') {
-            // This would normally verify the card without charging
+            console.log('Using setup intent for free BETA rank');
+            
             const response = await fetch('/api/create-setup-intent', {
                 method: 'POST',
                 headers: {
@@ -171,7 +174,14 @@ async function createPaymentIntent(rank, price, username) {
                 })
             });
             
+            console.log('Setup intent response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`Setup intent API returned ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log('Setup intent response data:', data);
             
             if (data.error) {
                 throw new Error(data.error);
@@ -181,6 +191,8 @@ async function createPaymentIntent(rank, price, username) {
         }
         
         // Regular payment intent for paid ranks
+        console.log('Using payment intent for paid rank');
+        
         const response = await fetch('/api/create-payment-intent', {
             method: 'POST',
             headers: {
@@ -193,7 +205,14 @@ async function createPaymentIntent(rank, price, username) {
             })
         });
         
+        console.log('Payment intent response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`Payment intent API returned ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('Payment intent response data:', data);
         
         if (data.error) {
             throw new Error(data.error);
@@ -201,8 +220,8 @@ async function createPaymentIntent(rank, price, username) {
         
         return data.clientSecret;
     } catch (error) {
+        console.error('Create payment intent detailed error:', error);
         showError('Failed to initialize payment. Please try again.');
-        console.error('Create payment intent error:', error);
         throw error;
     }
 }
