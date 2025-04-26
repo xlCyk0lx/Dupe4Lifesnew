@@ -1,3 +1,5 @@
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 module.exports = async (req, res) => {
     try {
         // Enable CORS
@@ -27,9 +29,6 @@ module.exports = async (req, res) => {
         if (rank !== 'beta') {
             return res.status(400).json({ error: 'Invalid rank for setup intent' });
         }
-        
-        // Load environment variables
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
         
         // Create a SetupIntent
         const setupIntent = await stripe.setupIntents.create({
