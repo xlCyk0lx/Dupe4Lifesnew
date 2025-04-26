@@ -10,12 +10,17 @@ module.exports = (req, res) => {
     return res.status(200).end();
   }
   
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
   console.log("Config API called");
   console.log("Stripe key exists:", !!process.env.STRIPE_PUBLISHABLE_KEY);
   
   // Return the publishable key
   return res.status(200).json({
-    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || 'missing-key',
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
     timestamp: new Date().toISOString()
   });
 };
