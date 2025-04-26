@@ -12,6 +12,642 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Add Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Store Hero Section */
+        .store-hero {
+            height: 50vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img/store-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .store-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 102, 0, 0.2) 0%, rgba(255, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 70%);
+        }
+
+        .store-hero-content {
+            max-width: 800px;
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        .store-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .store-hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .store-cta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        /* Section Badge */
+        .section-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Store Header */
+        .store-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .store-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .store-header p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Minecraft Username Container */
+        .minecraft-username-container {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--primary-color);
+        }
+
+        .minecraft-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .minecraft-input label {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .minecraft-input input {
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: var(--transition-speed);
+        }
+
+        .minecraft-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .skin-preview {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .skin-preview img {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .player-type {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        /* Rank Comparison Table */
+        .rank-comparison {
+            max-width: 1000px;
+            margin: 0 auto 4rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .rank-comparison-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+        }
+
+        .rank-title {
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .rank-title.beta {
+            color: #aaaaaa;
+        }
+
+        .rank-title.vip {
+            color: #55FF55;
+        }
+
+        .rank-title.mvp {
+            color: #55FFFF;
+        }
+
+        .rank-title.legend {
+            color: #FFAA00;
+        }
+
+        .rank-comparison-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rank-feature {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rank-feature:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .rank-feature-title {
+            font-weight: bold;
+        }
+
+        .rank-feature-value {
+            text-align: center;
+        }
+
+        .rank-feature-value i.fa-check {
+            color: #55FF55;
+        }
+
+        .rank-feature-value i.fa-times {
+            color: #FF5555;
+        }
+
+        /* Store Items */
+        .store-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .store-item {
+            width: 320px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition-speed);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .store-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .store-item.featured {
+            border: 1px solid var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .store-item.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .item-header {
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .item-header.beta {
+            background: linear-gradient(135deg, #555555, #333333);
+        }
+
+        .item-header.vip {
+            background: linear-gradient(135deg, #55FF55, #00AA00);
+        }
+
+        .item-header.mvp {
+            background: linear-gradient(135deg, #55FFFF, #00AAAA);
+        }
+
+        .item-header.legend {
+            background: linear-gradient(135deg, #FFAA00, #FF5500);
+        }
+
+        .rank-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .item-header h2 {
+            font-size: 1.8rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .free-tag, .featured-tag {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-bottom-left-radius: 8px;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        .item-content {
+            padding: 1.5rem;
+        }
+
+        .item-price {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .item-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-features li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-features i {
+            color: #55FF55;
+            margin-right: 0.5rem;
+        }
+
+        /* Perks Section */
+        .perks-section {
+            padding: 4rem 0;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 4rem;
+        }
+
+        .perks-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .perks-section p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .perks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .perk-card {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: var(--transition-speed);
+            border: 1px solid rgba(255, 0, 0, 0.1);
+        }
+
+        .perk-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .perk-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .perk-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .perk-card p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .faq-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .faq-question h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            text-align: left;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            text-align: left;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 200px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--background-darker);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-title h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .close-modal {
+            color: var(--text-light);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition-speed);
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        #purchase-summary {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            font-weight: bold;
+        }
+
+        .summary-value {
+            color: var(--accent-color);
+        }
+
+        .summary-note {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .summary-note i {
+            color: var(--accent-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .card-element {
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #card-errors {
+            color: #FF5252;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .secure-payment {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .secure-payment i {
+            margin-right: 0.3rem;
+            color: var(--accent-color);
+        }
+
+        #payment-success, #payment-processing {
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+
+        .processing-animation {
+            margin-bottom: 1rem;
+        }
+
+        .processing-animation i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .store-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .store-cta {
+                flex-direction: column;
+            }
+            
+            .rank-comparison-header, .rank-feature {
+                grid-template-columns: 1.5fr repeat(4, 1fr);
+                font-size: 0.9rem;
+            }
+            
+            .perks-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="particles-container" id="particles-js"></div>
@@ -59,6 +695,9 @@
                     <label for="minecraft-username">Enter your Minecraft username:</label>
                     <input type="text" id="minecraft-username" placeholder="Your Minecraft username">
                     <div class="skin-preview" id="skin-preview"></div>
+                    <div class="player-info" id="player-info" style="display: none;">
+                        <span>Account Type: <span class="player-type" id="player-type">Java</span></span>
+                    </div>
                 </div>
             </div>
 
@@ -79,11 +718,11 @@
                         <div class="rank-feature-value">$29.99</div>
                     </div>
                     <div class="rank-feature">
-                        <div class="rank-feature-title">Dupe Commands</div>
-                        <div class="rank-feature-value">1x Daily</div>
-                        <div class="rank-feature-value">3x Daily</div>
-                        <div class="rank-feature-value">5x Daily</div>
-                        <div class="rank-feature-value">Unlimited</div>
+                        <div class="rank-feature-title">Dupe Amount</div>
+                        <div class="rank-feature-value">Up to 3</div>
+                        <div class="rank-feature-value">Up to 5</div>
+                        <div class="rank-feature-value">Up to 7</div>
+                        <div class="rank-feature-value">Up to 10</div>
                     </div>
                     <div class="rank-feature">
                         <div class="rank-feature-title">Player Homes</div>
@@ -159,7 +798,7 @@
                             <li><i class="fas fa-check"></i> 1 extra player home</li>
                             <li><i class="fas fa-check"></i> Basic colored chat</li>
                             <li><i class="fas fa-check"></i> Early access to new features</li>
-                            <li><i class="fas fa-check"></i> 1x /dupe command usage daily</li>
+                            <li><i class="fas fa-check"></i> Up to 3 items with /dupe command</li>
                             <li><i class="fas fa-check"></i> Basic daily kit</li>
                         </ul>
                         <button class="minecraft-btn blue buy-button" data-rank="beta" data-price="0">
@@ -181,7 +820,7 @@
                             <li><i class="fas fa-check"></i> 3 player homes</li>
                             <li><i class="fas fa-check"></i> Colored chat messages</li>
                             <li><i class="fas fa-check"></i> VIP tag in chat & tab list</li>
-                            <li><i class="fas fa-check"></i> 3x /dupe command usage daily</li>
+                            <li><i class="fas fa-check"></i> Up to 5 items with /dupe command</li>
                             <li><i class="fas fa-check"></i> 1.5s chat cooldown</li>
                             <li><i class="fas fa-check"></i> Standard daily kit</li>
                         </ul>
@@ -205,7 +844,7 @@
                             <li><i class="fas fa-check"></i> 5 player homes</li>
                             <li><i class="fas fa-check"></i> Custom join messages</li>
                             <li><i class="fas fa-check"></i> MVP tag in chat & tab list</li>
-                            <li><i class="fas fa-check"></i> 5x /dupe command usage daily</li>
+                            <li><i class="fas fa-check"></i> Up to 7 items with /dupe command</li>
                             <li><i class="fas fa-check"></i> 0.5s chat cooldown</li>
                             <li><i class="fas fa-check"></i> Basic particle effects</li>
                             <li><i class="fas fa-check"></i> Premium daily kit</li>
@@ -233,7 +872,7 @@
                             <li><i class="fas fa-check"></i> Priority server access</li>
                             <li><i class="fas fa-check"></i> Custom particle effects</li>
                             <li><i class="fas fa-check"></i> LEGEND tag in chat & tab list</li>
-                            <li><i class="fas fa-check"></i> <strong>UNLIMITED</strong> /dupe command usage</li>
+                            <li><i class="fas fa-check"></i> Up to 10 items with /dupe command</li>
                             <li><i class="fas fa-check"></i> No chat cooldown</li>
                             <li><i class="fas fa-check"></i> Ultimate daily kit</li>
                             <li><i class="fas fa-check"></i> Custom name color</li>
@@ -256,261 +895,427 @@
                     <div class="perk-card">
                         <div class="perk-icon"><i class="fas fa-bolt"></i></div>
                         <h3>Dupe Commands</h3>
-                        <p>Duplicate items with the powerful                        <div class="perk-icon"><i class="fas fa-bolt"></i></div>
-                            <h3>Dupe Commands</h3>
-                            <p>Duplicate items with the powerful /dupe command. Higher ranks get more uses per day!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-home"></i></div>
-                            <h3>Player Homes</h3>
-                            <p>Set multiple homes across the world for easy teleportation. Up to 10 homes with LEGEND rank!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-comments"></i></div>
-                            <h3>Chat Perks</h3>
-                            <p>Colored chat, custom prefixes, and reduced cooldowns to make your presence known!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-feather"></i></div>
-                            <h3>Fly Command</h3>
-                            <p>Soar through the skies with /fly command. Available with VIP rank and above!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-user-secret"></i></div>
-                            <h3>Nick Command</h3>
-                            <p>Change your display name with /nick. Perfect for staying incognito!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-box"></i></div>
-                            <h3>Enderchest Access</h3>
-                            <p>Access your enderchest anywhere with a simple command. LEGEND exclusive!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-gift"></i></div>
-                            <h3>Daily Kits</h3>
-                            <p>Claim daily rewards with increasingly valuable items based on your rank!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-magic"></i></div>
-                            <h3>Particle Effects</h3>
-                            <p>Show off with custom particle effects that follow you around the server!</p>
-                        </div>
-                        <div class="perk-card">
-                            <div class="perk-icon"><i class="fas fa-door-open"></i></div>
-                            <h3>Priority Access</h3>
-                            <p>Skip the queue and get priority access when the server is full!</p>
-                        </div>
+                        <p>Duplicate up to 10 items with the powerful /dupe command. Higher ranks get more items per dupe!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-home"></i></div>
+                        <h3>Player Homes</h3>
+                        <p>Set multiple homes across the world for easy teleportation. Up to 10 homes with LEGEND rank!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-comments"></i></div>
+                        <h3>Chat Perks</h3>
+                        <p>Colored chat, custom prefixes, and reduced cooldowns to make your presence known!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-feather"></i></div>
+                        <h3>Fly Command</h3>
+                        <p>Soar through the skies with /fly command. Available with VIP rank and above!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-user-secret"></i></div>
+                        <h3>Nick Command</h3>
+                        <p>Change your display name with /nick. Perfect for staying incognito!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-box"></i></div>
+                        <h3>Enderchest Access</h3>
+                        <p>Access your enderchest anywhere with a simple command. LEGEND exclusive!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-gift"></i></div>
+                        <h3>Daily Kits</h3>
+                        <p>Claim daily rewards with increasingly valuable items based on your rank!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-magic"></i></div>
+                        <h3>Particle Effects</h3>
+                        <p>Show off with custom particle effects that follow you around the server!</p>
+                    </div>
+                    <div class="perk-card">
+                        <div class="perk-icon"><i class="fas fa-door-open"></i></div>
+                        <h3>Priority Access</h3>
+                        <p>Skip the queue and get priority access when the server is full!</p>
                     </div>
                 </div>
-    
-                <!-- Testimonials Section -->
-                <div class="testimonials-section">
-                    <div class="section-badge">PLAYER TESTIMONIALS</div>
-                    <h2>What Our Players Say</h2>
-                    
-                    <div class="testimonials-slider">
-                        <div class="testimonial">
-                            <div class="testimonial-content">
-                                <p>"The LEGEND rank is absolutely worth it! Unlimited dupes has completely changed how I play the game. Best purchase ever!"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="https://mc-heads.net/avatar/MHF_Steve" alt="Player avatar">
-                                <div>
-                                    <h4>DragonSlayer92</h4>
-                                    <span class="testimonial-rank legend">LEGEND</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial">
-                            <div class="testimonial-content">
-                                <p>"Even the VIP rank makes a huge difference. Being able to fly and having extra homes has made my builds so much easier!"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="https://mc-heads.net/avatar/MHF_Alex" alt="Player avatar">
-                                <div>
-                                    <h4>BuildMaster64</h4>
-                                    <span class="testimonial-rank vip">VIP</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial">
-                            <div class="testimonial-content">
-                                <p>"Started with MVP and upgraded to LEGEND within a week. The perks are insane and the staff is amazing. 10/10 server!"</p>
-                            </div>
-                            <div class="testimonial-author">
-                                <img src="https://mc-heads.net/avatar/Notch" alt="Player avatar">
-                                <div>
-                                    <h4>RedstoneWizard</h4>
-                                    <span class="testimonial-rank legend">LEGEND</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    
-                <!-- FAQ Section -->
-                <div class="faq-section">
-                    <div class="section-badge">FREQUENTLY ASKED QUESTIONS</div>
-                    <h2>Common Questions</h2>
-                    
-                    <div class="faq-container">
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                <h3>How long do ranks last?</h3>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                <p>All ranks are permanent! Once you purchase a rank, you'll keep it forever on our server.</p>
-                            </div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                <h3>How do I use the /dupe command?</h3>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                <p>Simply hold the item you want to duplicate in your main hand and type /dupe in the chat. The item will be duplicated based on your rank's daily limit.</p>
-                            </div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                <h3>Can I upgrade my rank later?</h3>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                <p>Yes! You can upgrade your rank at any time and only pay the difference between your current rank and the new one. Contact an admin on Discord for assistance.</p>
-                            </div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                <h3>How soon will I receive my rank after purchase?</h3>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">
-                                <p>Ranks are applied instantly after a successful purchase! You'll receive your perks immediately and can start using them right away.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <div class="section-badge">FREQUENTLY ASKED QUESTIONS</div>
+                <h2>Common Questions</h2>
                 
-                <!-- Payment Modal -->
-                <div id="payment-modal" class="modal">
-                    <div class="modal-content">
-                        <span class="close-modal">×</span>
-                        <div class="modal-header">
-                            <div class="modal-title">
-                                <h2>Complete Your Purchase</h2>
-                                <p>You're just one step away from unlocking amazing perks!</p>
-                            </div>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How long do ranks last?</h3>
+                            <i class="fas fa-chevron-down"></i>
                         </div>
-                        <div id="purchase-summary">
-                            <div class="summary-item">
-                                <span class="summary-label">Rank:</span>
-                                <span id="summary-rank" class="summary-value"></span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Price:</span>
-                                <span class="summary-value">$<span id="summary-price"></span></span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Minecraft Username:</span>
-                                <span id="summary-username" class="summary-value"></span>
-                            </div>
-                            <div class="summary-note">
-                                <i class="fas fa-info-circle"></i>
-                                <span>Your rank will be applied instantly after successful payment</span>
-                            </div>
+                        <div class="faq-answer">
+                            <p>All ranks are permanent! Once you purchase a rank, you'll keep it forever on our server.</p>
                         </div>
-                        <div id="payment-form-container">
-                            <form id="payment-form">
-                                <div class="form-group">
-                                    <label for="card-element">Card Information:</label>
-                                    <div id="card-element" class="card-element">
-                                        <!-- Stripe Card Element will be inserted here -->
-                                    </div>
-                                    <div id="card-errors" role="alert"></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I use the /dupe command?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Simply hold the item you want to duplicate in your main hand and type /dupe followed by a number (up to your rank's maximum) in the chat. For example, "/dupe 5" will duplicate the item 5 times if your rank allows it.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Can I upgrade my rank later?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! You can upgrade your rank at any time and only pay the difference between your current rank and the new one. Contact an admin on Discord for assistance.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How soon will I receive my rank after purchase?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ranks are applied instantly after a successful purchase! You'll receive your perks immediately and can start using them right away.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Modal -->
+            <div id="payment-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">×</span>
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <h2>Complete Your Purchase</h2>
+                            <p>You're just one step away from unlocking amazing perks!</p>
+                        </div>
+                    </div>
+                    <div id="purchase-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Rank:</span>
+                            <span id="summary-rank" class="summary-value"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Price:</span>
+                            <span class="summary-value">$<span id="summary-price"></span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Minecraft Username:</span>
+                            <span id="summary-username" class="summary-value"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Account Type:</span>
+                            <span id="summary-account-type" class="summary-value"></span>
+                        </div>
+                        <div class="summary-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Your rank will be applied instantly after successful payment</span>
+                        </div>
+                    </div>
+                    <div id="payment-form-container">
+                        <form id="payment-form">
+                            <div class="form-group">
+                                <label for="card-element">Card Information:</label>
+                                <div id="card-element" class="card-element">
+                                    <!-- Stripe Card Element will be inserted here -->
                                 </div>
-                                <button type="submit" class="minecraft-btn green" id="submit-payment">
-                                    <i class="fas fa-lock"></i> Complete Purchase
-                                </button>
-                                <div class="secure-payment">
-                                    <i class="fas fa-shield-alt"></i> Secure payment powered by Stripe
-                                </div>
-                            </form>
-                        </div>
-                        <div id="payment-success" style="display: none;">
-                            <i class="fas fa-check-circle success-icon"></i>
-                            <h3>Payment Successful!</h3>
-                            <p>Your rank has been applied to your account. Enjoy your new perks!</p>
-                            <p>An announcement has been made in the server about your purchase.</p>
-                            <button class="minecraft-btn green" onclick="document.getElementById('payment-modal').style.display='none';">
-                                <i class="fas fa-gamepad"></i> Start Playing Now!
+                                <div id="card-errors" role="alert"></div>
+                            </div>
+                            <button type="submit" class="minecraft-btn green" id="submit-payment">
+                                <i class="fas fa-lock"></i> Complete Purchase
                             </button>
-                        </div>
-                        <div id="payment-processing" style="display: none;">
-                            <div class="processing-animation">
-                                <i class="fas fa-spinner fa-spin"></i>
+                            <div class="secure-payment">
+                                <i class="fas fa-shield-alt"></i> Secure payment powered by Stripe
                             </div>
-                            <h3>Processing your payment...</h3>
-                            <p>Please don't close this window.</p>
+                        </form>
+                    </div>
+                    <div id="payment-success" style="display: none;">
+                        <i class="fas fa-check-circle success-icon"></i>
+                        <h3>Payment Successful!</h3>
+                        <p>Your rank has been applied to your account. Enjoy your new perks!</p>
+                        <p>An announcement has been made in the server about your purchase.</p>
+                        <button class="minecraft-btn green" onclick="document.getElementById('payment-modal').style.display='none';">
+                            <i class="fas fa-gamepad"></i> Start Playing Now!
+                        </button>
+                    </div>
+                    <div id="payment-processing" style="display: none;">
+                        <div class="processing-animation">
+                            <i class="fas fa-spinner fa-spin"></i>
                         </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h2 class="footer-server-title">DUPE4LIFES</h2>
-                    <p>The ultimate Lifesteal Dupe experience</p>
-                </div>
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="store.html">Store</a></li>
-                        <li><a href="https://discord.gg/yourlink" target="_blank">Discord</a></li>
-                        <li><a href="portal.html">Portal</a></li>
-                    </ul>
-                </div>
-                <div class="footer-social">
-                    <h3>Connect With Us</h3>
-                    <div class="social-icons">
-                        <a href="https://discord.gg/yourlink" target="_blank"><i class="fab fa-discord"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <h3>Processing your payment...</h3>
+                        <p>Please don't close this window.</p>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>© 2025 DUPE4LIFES. All rights reserved.</p>
-            </div>
-        </footer>
+        </section>
+    </main>
     
-        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-        <script src="js/script.js"></script>
-        <script src="js/store.js"></script>
-        <script>
-            // Add Minecraft skin preview
-            document.getElementById('minecraft-username').addEventListener('blur', function() {
-                const username = this.value.trim();
-                if (username) {
-                    const skinPreview = document.getElementById('skin-preview');
-                    skinPreview.innerHTML = `<img src="https://mc-heads.net/avatar/${username}" alt="${username}'s skin">`;
-                    skinPreview.style.display = 'block';
-                }
-            });
-            
-            // FAQ accordion
-            document.querySelectorAll('.faq-question').forEach(question => {
-                question.addEventListener('click', () => {
-                    const item = question.parentElement;
-                    item.classList.toggle('active');
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2 class="footer-server-title">DUPE4LIFES</h2>
+                <p>The ultimate Lifesteal Dupe experience</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="store.html">Store</a></li>
+                    <li><a href="https://dc.gg/dupe4lifes" target="_blank">Discord</a></li>
+                    <li><a href="portal.html">Portal</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://dc.gg/dupe4lifes" target="_blank"><i class="fab fa-discord"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DUPE4LIFES. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Add Minecraft skin preview and detect account type
+        document.getElementById('minecraft-username').addEventListener('blur', function() {
+            const username = this.value.trim();
+            if (username) {
+                const skinPreview = document.getElementById('skin-preview');
+                const playerInfo = document.getElementById('player-info');
+                const playerType = document.getElementById('player-type');
+                
+                // Detect if Bedrock (starts with .) or Java
+                const isBedrockUser = username.startsWith('.');
+                const displayName = isBedrockUser ? username.substring(1) : username;
+                
+                // Set account type
+                playerType.textContent = isBedrockUser ? 'Bedrock' : 'Java';
+                
+                // Show skin preview
+                skinPreview.innerHTML = `<img src="https://mc-heads.net/avatar/${displayName}/100" alt="${displayName}'s skin">`;
+                playerInfo.style.display = 'block';
+            }
+        });
+
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
                 });
+                
+                // Toggle current item
+                item.classList.toggle('active');
             });
-        </script>
-    </body>
-    </html>
-    
+        });
+
+        // Purchase button click handler
+        const buyButtons = document.querySelectorAll('.buy-button');
+        buyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const rank = this.getAttribute('data-rank');
+                const price = this.getAttribute('data-price');
+                const username = document.getElementById('minecraft-username').value.trim();
+                
+                if (!username) {
+                    alert('Please enter your Minecraft username first!');
+                    document.getElementById('minecraft-username').focus();
+                    return;
+                }
+                
+                // Set modal content
+                document.getElementById('summary-rank').textContent = rank.toUpperCase();
+                document.getElementById('summary-price').textContent = (price / 100).toFixed(2);
+                document.getElementById('summary-username').textContent = username;
+                document.getElementById('summary-account-type').textContent = 
+                    username.startsWith('.') ? 'Bedrock' : 'Java';
+                
+                // Show modal
+                document.getElementById('payment-modal').style.display = 'block';
+                
+                // Reset form state
+                document.getElementById('payment-form-container').style.display = 'block';
+                document.getElementById('payment-success').style.display = 'none';
+                document.getElementById('payment-processing').style.display = 'none';
+            });
+        });
+
+        // Close modal
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('payment-modal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('payment-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Form submission (simulated for demo)
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show processing
+            document.getElementById('payment-form-container').style.display = 'none';
+            document.getElementById('payment-processing').style.display = 'block';
+            
+            // Simulate payment processing
+            setTimeout(function() {
+                document.getElementById('payment-processing').style.display = 'none';
+                document.getElementById('payment-success').style.display = 'block';
+            }, 2000);
+        });
+
+        // Copy IP function
+        function copyIP() {
+            const ip = document.getElementById('server-ip').textContent;
+            navigator.clipboard.writeText(ip).then(() => {
+                // Show toast notification
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = 'Server IP copied to clipboard!';
+                document.body.appendChild(toast);
+                
+                // Show the toast
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100);
+                
+                // Hide the toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 3000);
+            });
+        }
+
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ff0000"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ff0000",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>
