@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log('Initializing payment system...');
         
         // Fetch the publishable key from the server
-        const response = await fetch('/api/config');
+        const response = await fetch(window.location.origin + '/api/config');
         console.log('Config response status:', response.status);
         
         if (!response.ok) {
