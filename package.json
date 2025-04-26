@@ -1,8 +1,12 @@
 {
   "name": "dupe4lifes",
   "version": "1.0.0",
-  "description": "DUPE4LIFES Minecraft server website",
+  "description": "Minecraft rank store",
+  "main": "index.js",
   "dependencies": {
     "stripe": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=18.x"
   }
 }
