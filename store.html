@@ -647,6 +647,35 @@
                 grid-template-columns: 1fr;
             }
         }
+        .skin-preview {
+    margin-top: 1rem;
+    text-align: center;
+    min-height: 100px;
+}
+
+.skin-preview img {
+    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.skin-preview img:hover {
+    transform: scale(1.1);
+}
+
+.player-info {
+    margin-top: 0.5rem;
+    text-align: center;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.player-type {
+    font-weight: bold;
+    color: var(--accent-color);
+}
     </style>
 </head>
 <body>
@@ -1104,8 +1133,10 @@
                 playerType.textContent = isBedrockUser ? 'Bedrock' : 'Java';
                 
                 // Show skin preview
-                skinPreview.innerHTML = `<img src="https://mc-heads.net/avatar/${displayName}/100" alt="${displayName}'s skin">`;
-                playerInfo.style.display = 'block';
+skinPreview.style.display = 'block'; // Make the skin preview visible
+skinPreview.innerHTML = `<img src="https://mc-heads.net/avatar/${displayName}/100" alt="${displayName}'s skin">`;
+playerInfo.style.display = 'block';
+
             }
         });
 
