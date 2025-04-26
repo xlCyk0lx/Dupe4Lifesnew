@@ -9,23 +9,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log('Initializing payment system...');
         
         // Fetch the publishable key from the server
-        const response = await fetch('/api/config.js');
-        console.log('Config response:', response);
+        const response = await fetch('/api/config');
+        console.log('Config response status:', response.status);
         
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Config API error response:', errorText);
             throw new Error(`Config API returned ${response.status}: ${response.statusText}`);
         }
         
-        const { publishableKey } = await response.json();
-        console.log('Publishable key received (hidden):', '***');
+        const data = await response.json();
+        console.log('Config data received:', Object.keys(data));
         
-        if (!publishableKey) {
+        if (!data.publishableKey) {
             throw new Error('No publishable key returned from server');
         }
         
         // Initialize Stripe with the publishable key
         console.log('Initializing Stripe...');
-        stripe = Stripe(publishableKey);
+        stripe = Stripe(data.publishableKey);
         console.log('Stripe initialized successfully');
         
         // Set up Stripe card element
@@ -123,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             }
                         });
                     }
-            
+                    
                     // For paid ranks
                     return stripe.confirmCardPayment(clientSecret, {
                         payment_method: {
@@ -149,8 +151,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 });
         });
     } catch (error) {
-        console.error('Initialization error:', error);
-        showToast('Failed to initialize payment system. Please try again later.');
+        console.error('Detailed initialization error:', error);
+        showToast('Failed to initialize payment system. Please check the console for details.');
     }
 });
 
@@ -177,6 +179,8 @@ async function createPaymentIntent(rank, price, username) {
             console.log('Setup intent response status:', response.status);
             
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Setup intent error response:', errorText);
                 throw new Error(`Setup intent API returned ${response.status}`);
             }
             
@@ -208,6 +212,8 @@ async function createPaymentIntent(rank, price, username) {
         console.log('Payment intent response status:', response.status);
         
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Payment intent error response:', errorText);
             throw new Error(`Payment intent API returned ${response.status}`);
         }
         
@@ -230,7 +236,7 @@ async function createPaymentIntent(rank, price, username) {
 async function handleSuccessfulPayment(username, rank) {
     try {
         // Call your server to record the successful payment
-        const response = await fetch('/api/apply-rank.js', {
+        const response = await fetch('/api/apply-rank', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -240,6 +246,12 @@ async function handleSuccessfulPayment(username, rank) {
                 rank: rank
             })
         });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Apply rank error response:', errorText);
+            throw new Error(`Apply rank API returned ${response.status}`);
+        }
         
         const data = await response.json();
         
