@@ -8,7 +8,9 @@
     { "src": "images/**/*", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" }
-  ],
-  "cleanUrls": true
+    { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)\\.html", "status": 301, "headers": { "Location": "/$1" } },
+    { "src": "/(.*)", "dest": "/$1.html" }
+  ]
 }
