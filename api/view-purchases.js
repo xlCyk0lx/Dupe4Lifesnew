@@ -86,7 +86,7 @@ function sendHtml(res, purchases) {
         <td>${formatDate(p.purchaseDate)}</td>
         <td>
           <span class="status ${p.processed ? 'processed' : 'pending'}">
-            ${p.processed ? 'Processed' : 'Pending'}
+            ${p.processed ? 'Claimed' : 'Pending'}
           </span>
           ${p.processedDate ? `<br><small>${formatDate(p.processedDate)}</small>` : ''}
         </td>
@@ -172,7 +172,7 @@ function sendHtml(res, purchases) {
       <div class="summary">
         <p><strong>Total Purchases:</strong> ${purchases.length}</p>
         <p><strong>Pending:</strong> ${purchases.filter(p => !p.processed).length}</p>
-        <p><strong>Processed:</strong> ${purchases.filter(p => p.processed).length}</p>
+        <p><strong>Claimed:</strong> ${purchases.filter(p => p.processed).length}</p>
       </div>
       
       <button class="refresh" onclick="window.location.reload()">Refresh</button>
