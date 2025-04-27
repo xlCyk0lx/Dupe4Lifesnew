@@ -1,37 +1,23 @@
-const fs = require('fs');
-const path = require('path');
+const { kv } = require('@vercel/kv');
 
-// Path to our purchase log file
-const PURCHASES_FILE = path.join(process.cwd(), 'data', 'purchases.json');
-
-// Ensure the data directory exists
-function ensureDirectoryExists() {
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-  
-  // Create purchases file if it doesn't exist
-  if (!fs.existsSync(PURCHASES_FILE)) {
-    fs.writeFileSync(PURCHASES_FILE, JSON.stringify([]));
-  }
-}
+// Key for storing purchases in KV store
+const PURCHASES_KEY = 'dupe4lifes_purchases';
 
 // Load existing purchases
-function loadPurchases() {
+async function loadPurchases() {
   try {
-    const data = fs.readFileSync(PURCHASES_FILE, 'utf8');
-    return JSON.parse(data);
+    const purchases = await kv.get(PURCHASES_KEY);
+    return purchases || [];
   } catch (error) {
     console.error('Error loading purchases:', error);
     return [];
   }
 }
 
-// Save purchases to file
-function savePurchases(purchases) {
+// Save purchases to KV store
+async function savePurchases(purchases) {
   try {
-    fs.writeFileSync(PURCHASES_FILE, JSON.stringify(purchases, null, 2));
+    await kv.set(PURCHASES_KEY, purchases);
     return true;
   } catch (error) {
     console.error('Error saving purchases:', error);
@@ -39,7 +25,7 @@ function savePurchases(purchases) {
   }
 }
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -59,8 +45,7 @@ module.exports = (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     
-    ensureDirectoryExists();
-    const purchases = loadPurchases();
+    const purchases = await loadPurchases();
     
     // Optional: Add query parameters to filter purchases
     const { processed } = req.query;
@@ -78,15 +63,13 @@ module.exports = (req, res) => {
   
   // POST request to add a new purchase (from the website)
   if (req.method === 'POST') {
-    ensureDirectoryExists();
-    
     const { username, rank, price, item } = req.body;
     
     if (!username || !rank) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
-    const purchases = loadPurchases();
+    const purchases = await loadPurchases();
     
     // Add new purchase
     const newPurchase = {
@@ -101,7 +84,7 @@ module.exports = (req, res) => {
     
     purchases.push(newPurchase);
     
-    if (savePurchases(purchases)) {
+    if (await savePurchases(purchases)) {
       return res.status(201).json(newPurchase);
     } else {
       return res.status(500).json({ error: 'Failed to save purchase' });
@@ -116,15 +99,13 @@ module.exports = (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     
-    ensureDirectoryExists();
-    
     const { id } = req.body;
     
     if (!id) {
       return res.status(400).json({ error: 'Missing purchase ID' });
     }
     
-    const purchases = loadPurchases();
+    const purchases = await loadPurchases();
     const purchaseIndex = purchases.findIndex(p => p.id === id);
     
     if (purchaseIndex === -1) {
@@ -135,7 +116,7 @@ module.exports = (req, res) => {
     purchases[purchaseIndex].processed = true;
     purchases[purchaseIndex].processedDate = new Date().toISOString();
     
-    if (savePurchases(purchases)) {
+    if (await savePurchases(purchases)) {
       return res.status(200).json(purchases[purchaseIndex]);
     } else {
       return res.status(500).json({ error: 'Failed to update purchase' });
