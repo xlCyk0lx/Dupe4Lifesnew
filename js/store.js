@@ -261,6 +261,28 @@ async function handleSuccessfulPayment(username, rank) {
             return;
         }
         
+        // Track the purchase for the Minecraft server
+        try {
+            const priceInDollars = (parseInt(selectedPrice) / 100).toFixed(2);
+            
+            await fetch('/api/track-purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    rank: rank,
+                    price: priceInDollars,
+                    item: rank // For now, item is the same as rank
+                })
+            });
+            console.log('Purchase tracked successfully');
+        } catch (trackError) {
+            console.error('Failed to track purchase:', trackError);
+            // Don't show error to user, as the rank was already applied
+        }
+        
         // Show success message
         document.getElementById('payment-processing').style.display = 'none';
         document.getElementById('payment-success').style.display = 'block';
