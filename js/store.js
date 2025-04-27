@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log('Initializing payment system...');
         
         // Fetch the publishable key from the server
-        const response = await fetch('/api/config.js');
+        const response = await fetch('/api/config');
         console.log('Config response status:', response.status);
         
         if (!response.ok) {
@@ -165,7 +165,7 @@ async function createPaymentIntent(rank, price, username) {
         if (rank === 'beta' && price === '0') {
             console.log('Using setup intent for free BETA rank');
             
-            const response = await fetch('/api/create-setup-intent.js', {
+            const response = await fetch('/api/create-setup-intent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -197,7 +197,7 @@ async function createPaymentIntent(rank, price, username) {
         // Regular payment intent for paid ranks
         console.log('Using payment intent for paid rank');
         
-        const response = await fetch('/api/create-payment-intent.js', {
+        const response = await fetch('/api/create-payment-intent', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -236,7 +236,7 @@ async function createPaymentIntent(rank, price, username) {
 async function handleSuccessfulPayment(username, rank) {
     try {
         // Call your server to record the successful payment
-        const response = await fetch('/api/apply-rank.js', {
+        const response = await fetch('/api/apply-rank', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
