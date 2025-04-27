@@ -1,10 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+const { kv } = require('@vercel/kv');
 
-// Path to our purchase log file
-const PURCHASES_FILE = path.join(process.cwd(), 'data', 'purchases.json');
+// Key for storing purchases in KV store
+const PURCHASES_KEY = 'dupe4lifes_purchases';
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,16 +20,9 @@ module.exports = (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
   
-  // Check if the file exists
-  if (!fs.existsSync(PURCHASES_FILE)) {
-    // Return HTML with no purchases
-    return sendHtml(res, []);
-  }
-  
   try {
-    // Read the purchases file
-    const data = fs.readFileSync(PURCHASES_FILE, 'utf8');
-    const purchases = JSON.parse(data);
+    // Read purchases from KV store
+    const purchases = await kv.get(PURCHASES_KEY) || [];
     
     // Return HTML with purchases
     return sendHtml(res, purchases);
@@ -89,7 +81,7 @@ function sendHtml(res, purchases) {
       <tr>
         <td>${p.username}</td>
         <td>${p.rank}</td>
-        <td>$${p.price}</td>
+        <td>${p.price}</td>
         <td>${p.item || p.rank}</td>
         <td>${formatDate(p.purchaseDate)}</td>
         <td>
