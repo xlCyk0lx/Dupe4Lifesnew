@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUPE4LIFES - Lifesteal Dupe Minecraft Server</title>
-    <meta name="description" content="Join DUPE4LIFES Minecraft server for the best lifesteal and duplication experience!">
-    <meta name="og:description" content="Join DUPE4LIFES Minecraft server for the best lifesteal and duplication experience!">
-    <meta name="og:title" content="DUPE4LIFES - Lifesteal Dupe Minecraft Server">
-    <meta name="og:url" content="https://dupe4lifes.org">
+    <title>DUPE4LIFES - Server Store</title>
+    <meta name="description" content="Purchase ranks and perks for the DUPE4LIFES Minecraft server!">
+    <meta name="og:description" content="Purchase ranks and perks for the DUPE4LIFES Minecraft server!">
+    <meta name="og:title" content="DUPE4LIFES - Server Store">
+    <meta name="og:url" content="https://dupe4lifes.org/store">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
     <div class="particles-container" id="particles-js"></div>
@@ -25,8 +26,8 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="store.html">Store</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="store.html" class="active">Store</a></li>
                 <li><a href="https://dc.gg/dupe4lifes" target="_blank">Discord</a></li>
                 <li><a href="portal.html">Portal</a></li>
             </ul>
@@ -34,111 +35,269 @@
     </header>
 
     <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Welcome to <span class="server-name">DUPE4LIFES</span></h1>
-                <p>The Ultimate Lifesteal Dupe Server</p>
-                <div class="cta-buttons">
-                    <a href="#" class="cta-button primary" onclick="copyIP()">
-                        <i class="fas fa-play"></i> Play Now
-                    </a>
-                    <a href="https://dc.gg/dupe4lifes" class="cta-button secondary" target="_blank">
-                        <i class="fab fa-discord"></i> Join Discord
-                    </a>
-                </div>
+        <section class="store-hero">
+            <div class="store-hero-content">
+                <h1>DUPE4LIFES STORE</h1>
+                <p>Support the server and get awesome perks!</p>
             </div>
         </section>
 
-        <section class="server-info">
-            <h2>About Our Server</h2>
-            <div class="info-content">
-                <div class="info-text">
-                    <p>DUPE4LIFES is a minecraft server i created about <b>5 years Ago</b> thats is crazy to me i thank all my members for sticking with me</p>
-                    <p>Our server is a Lifesteal dupe what is a lifesteal dupe? its a server with a twist that is Lifesteal & Duplaction commands being /dupe</p>
-                    <p>This was one of the first Lifesteal dupe servers created inspired by <b>DupeKits</b></p>
-                    </p>
-                    <div class="info-features">
-                        <div class="info-feature">
-                            <i class="fas fa-heart"></i>
-                            <h3>Lifesteal</h3>
-                            <p>Kill other players to steal there hearts</p>
-                        </div>
-                        <div class="info-feature">
-                            <i class="fas fa-clone"></i>
-                            <h3>Duplication</h3>
-                            <p>Use the ingame command to dupelicate items using </p>
-                            <p> The /Dupe command </p>
-                        </div>
-                        <div class="info-feature">
-                            <i class="fas fa-users"></i>
-                            <h3>Community</h3>
-                            <p>Join a friendly and active player base</p>
-                        </div>
+        <section class="store-section">
+            <div class="minecraft-username-container">
+                <div class="minecraft-input">
+                    <label for="minecraft-edition">Minecraft Edition:</label>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="radio" name="minecraft-edition" value="java" checked> 
+                            <span style="margin-left: 0.5rem;">Java Edition</span>
+                        </label>
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="radio" name="minecraft-edition" value="bedrock"> 
+                            <span style="margin-left: 0.5rem;">Bedrock Edition</span>
+                        </label>
+                    </div>
+                    
+                    <label for="minecraft-username">Your Minecraft Username:</label>
+                    <div style="display: flex; align-items: center;">
+                        <span id="bedrock-prefix" style="display: none; margin-right: 5px; color: #aaa;">.</span>
+                        <input type="text" id="minecraft-username" placeholder="Enter your username" required>
+                    </div>
+                    <div id="skin-preview" style="margin-top: 1rem; text-align: center;">
+                        <p>Your skin:</p>
+                        <img id="skin-image" src="https://mc-heads.net/avatar/steve" alt="Minecraft Skin">
                     </div>
                 </div>
-                <div class="info-image">
-                    <!-- Server showcase image would go here -->
+            </div>
+
+            <div class="store-items">
+                <div class="store-item">
+                    <div class="item-header vip">
+                        <h2>VIP</h2>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-price">$5.99</div>
+                        <ul class="item-features">
+                            <li><i class="fas fa-check"></i> Access to /dupe command (5 min cooldown)</li>
+                            <li><i class="fas fa-check"></i> Colored name in chat</li>
+                            <li><i class="fas fa-check"></i> Access to VIP kit</li>
+                            <li><i class="fas fa-check"></i> 2 homes with /sethome</li>
+                            <li><i class="fas fa-check"></i> Priority queue during server restarts</li>
+                        </ul>
+                        <button class="minecraft-btn green buy-button" data-rank="vip" data-price="599">Purchase VIP</button>
+                    </div>
+                </div>
+
+                <div class="store-item featured">
+                    <div class="featured-tag">POPULAR</div>
+                    <div class="item-header mvp">
+                        <h2>MVP</h2>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-price">$14.99</div>
+                        <ul class="item-features">
+                            <li><i class="fas fa-check"></i> Access to /dupe command (2 min cooldown)</li>
+                            <li><i class="fas fa-check"></i> Colored name with special prefix</li>
+                            <li><i class="fas fa-check"></i> Access to MVP kit</li>
+                            <li><i class="fas fa-check"></i> 5 homes with /sethome</li>
+                            <li><i class="fas fa-check"></i> Access to /fly in spawn</li>
+                            <li><i class="fas fa-check"></i> All VIP perks included</li>
+                        </ul>
+                        <button class="minecraft-btn blue buy-button" data-rank="mvp" data-price="1499">Purchase MVP</button>
+                    </div>
+                </div>
+
+                <div class="store-item">
+                    <div class="item-header legend">
+                        <h2>LEGEND</h2>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-price">$24.99</div>
+                        <ul class="item-features">
+                            <li><i class="fas fa-check"></i> Access to /dupe command (30 sec cooldown)</li>
+                            <li><i class="fas fa-check"></i> Animated name with custom prefix</li>
+                            <li><i class="fas fa-check"></i> Access to LEGEND kit</li>
+                            <li><i class="fas fa-check"></i> 10 homes with /sethome</li>
+                            <li><i class="fas fa-check"></i> Access to /fly everywhere</li>
+                            <li><i class="fas fa-check"></i> Access to /heal and /feed</li>
+                            <li><i class="fas fa-check"></i> All MVP perks included</li>
+                        </ul>
+                        <button class="minecraft-btn gold buy-button" data-rank="legend" data-price="2499">Purchase LEGEND</button>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="features">
-            <h2>Server Features</h2>
-            <div class="feature-cards">
-                <div class="feature-card">
-                    <i class="fas fa-heart"></i>
-                    <h3>Lifesteal Mechanics</h3>
-                    <p>Gain hearts by defeating other players in combat. The more hearts you collect, the stronger you become!</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-clone"></i>
-                    <h3>Duplication Allowed</h3>
-                    <p>Unlike other servers, we allow duplication using the command /dupe!</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Teams</h3>
-                    <p>Join or create a team with friends to work together and dominate the server.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-bolt"></i>
-                    <h3>Low Performance</h3>
-                    <p>Play lag-free on our low-performance server with 1% uptime and unoptimized gameplay. <b><< joke</b></p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Active Staff</h3>
-                    <p>Our dedicated staff team is always ready to help with any issues and ensure a fair gaming environment.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Regular Events</h3>
-                    <p>Participate in exciting server events with awesome prizes and opportunities to showcase your skills.</p>
-                </div>
+        <section class="rank-comparison">
+            <h2>Rank Comparison</h2>
+            <div style="overflow-x: auto;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th class="vip-col">VIP</th>
+                            <th class="mvp-col">MVP</th>
+                            <th class="legend-col">LEGEND</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>/dupe cooldown</td>
+                            <td>5 minutes</td>
+                            <td>2 minutes</td>
+                            <td>30 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Custom name</td>
+                            <td>Colored</td>
+                            <td>Special prefix</td>
+                            <td>Animated</td>
+                        </tr>
+                        <tr>
+                            <td>Homes</td>
+                            <td>2</td>
+                            <td>5</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td>Fly</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td>Spawn only</td>
+                            <td>Everywhere</td>
+                        </tr>
+                        <tr>
+                            <td>/heal & /feed</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Special kit</td>
+                            <td>VIP Kit</td>
+                            <td>MVP Kit</td>
+                            <td>LEGEND Kit</td>
+                        </tr>
+                        <tr>
+                            <td>Queue priority</td>
+                            <td>Medium</td>
+                            <td>High</td>
+                            <td>Highest</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
-        <section class="server-stats">
-            <h2>Server Statistics</h2>
-            <div class="stats-container">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Online Players</h3>
-                    <p id="player-count">Loading...</p>
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How do I receive my rank after purchase?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Your rank will be automatically applied to your account within 5 minutes of a successful purchase. If you don't receive your rank after 10 minutes, please contact us on Discord.</p>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-signal"></i>
-                    <h3>Server Status</h3>
-                    <p id="server-status">Checking...</p>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Are ranks permanent or do they expire?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>All ranks on DUPE4LIFES are permanent and will not expire. You'll keep your rank even after server resets or seasons.</p>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-calendar-check"></i>
-                    <h3>Uptime</h3>
-                    <p>1% (joke)</p>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I upgrade my rank later?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! If you want to upgrade your rank in the future, you'll only need to pay the difference between your current rank and the new one. Contact us on Discord for assistance with rank upgrades.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do you offer refunds?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Due to the digital nature of our products, we generally do not offer refunds. However, if you encounter any issues with your purchase, please contact our support team on Discord.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h2>Complete Your Purchase</h2>
+                    <p>You're just one step away from getting awesome perks!</p>
+                </div>
+            </div>
+            
+            <div id="payment-form-container">
+                <div id="purchase-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Rank:</span>
+                        <span class="summary-value" id="summary-rank">VIP</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Price:</span>
+                        <span class="summary-value">$<span id="summary-price">5.99</span></span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Username:</span>
+                        <span class="summary-value" id="summary-username">Username</span>
+                    </div>
+                    <div class="summary-note">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Please make sure your username is correct before proceeding.</span>
+                    </div>
+                </div>
+                
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="card-element">Credit or debit card</label>
+                        <div id="card-element" class="card-element">
+                            <!-- Stripe Card Element will be inserted here -->
+                        </div>
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+                    
+                    <button type="submit" class="minecraft-btn red" style="width: 100%;">Pay Now</button>
+                    
+                    <div class="secure-payment">
+                        <i class="fas fa-lock"></i>
+                        <span>Payments are secure and encrypted</span>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="payment-processing" style="display: none; text-align: center;">
+                <div class="processing-animation">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary-color);"></i>
+                </div>
+                <h3>Processing Your Payment</h3>
+                <p>Please don't close this window...</p>
+            </div>
+            
+            <div id="payment-success" style="display: none; text-align: center;">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Payment Successful!</h3>
+                <p>Your rank has been applied to your account.</p>
+                <p>Enjoy your new perks on DUPE4LIFES!</p>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-content">
@@ -146,19 +305,20 @@
                 <h2 class="footer-server-title">DUPE4LIFES</h2>
                 <p>The ultimate Lifesteal Dupe experience</p>
             </div>
+            <div
             <div class="footer-links">
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="store.html">Store</a></li>
-                    <li><a href="https://discord.gg/yourlink" target="_blank">Discord</a></li>
+                    <li><a href="https://dc.gg/dupe4lifes" target="_blank">Discord</a></li>
                     <li><a href="portal.html">Portal</a></li>
                 </ul>
             </div>
             <div class="footer-social">
                 <h3>Connect With Us</h3>
                 <div class="social-icons">
-                    <a href="https://discord.gg/yourlink" target="_blank"><i class="fab fa-discord"></i></a>
+                    <a href="https://dc.gg/dupe4lifes" target="_blank"><i class="fab fa-discord"></i></a>
                     <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
                     <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
@@ -171,6 +331,139 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/store.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy IP functionality
+            window.copyIP = function() {
+                const ip = document.getElementById('server-ip').textContent;
+                navigator.clipboard.writeText(ip).then(() => {
+                    showToast('Server IP copied to clipboard!');
+                });
+            };
+
+            // Initialize particles.js
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 80, density: { enable: true, value_area: 800 } },
+                        color: { value: "#ff0000" },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.5, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: "#ff0000",
+                            opacity: 0.4,
+                            width: 1
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2,
+                            direction: "none",
+                            random: true,
+                            straight: false,
+                            out_mode: "out",
+                            bounce: false
+                        }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: {
+                            onhover: { enable: true, mode: "repulse" },
+                            onclick: { enable: true, mode: "push" },
+                            resize: true
+                        }
+                    },
+                    retina_detect: true
+                });
+            }
+
+            // Handle Minecraft edition selection
+            const editionRadios = document.querySelectorAll('input[name="minecraft-edition"]');
+            const bedrockPrefix = document.getElementById('bedrock-prefix');
+            const usernameInput = document.getElementById('minecraft-username');
+            const skinPreview = document.getElementById('skin-preview');
+            const skinImage = document.getElementById('skin-image');
+
+            // Function to update skin preview
+            function updateSkinPreview() {
+                const username = usernameInput.value.trim();
+                if (username) {
+                    // For Bedrock, we need to remove the dot prefix for the skin API
+                    const skinUsername = document.querySelector('input[name="minecraft-edition"]:checked').value === 'bedrock' 
+                        ? username 
+                        : username;
+                    
+                    skinImage.src = `https://mc-heads.net/avatar/${skinUsername}`;
+                    skinPreview.style.display = 'block';
+                } else {
+                    skinPreview.style.display = 'none';
+                }
+            }
+
+            // Handle edition change
+            editionRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'bedrock') {
+                        bedrockPrefix.style.display = 'inline';
+                    } else {
+                        bedrockPrefix.style.display = 'none';
+                    }
+                    updateSkinPreview();
+                });
+            });
+
+            // Handle username input
+            usernameInput.addEventListener('input', updateSkinPreview);
+            usernameInput.addEventListener('blur', updateSkinPreview);
+
+            // FAQ accordion functionality
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    // Close all other items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current item
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Function to show toast notification (backup in case store.js doesn't load)
+            window.showToast = function(message) {
+                // Remove existing toast if any
+                const existingToast = document.querySelector('.toast');
+                if (existingToast) {
+                    existingToast.remove();
+                }
+                
+                // Create new toast
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                // Show toast
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 10);
+                
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, 3000);
+            };
+        });
+    </script>
 </body>
 </html>
