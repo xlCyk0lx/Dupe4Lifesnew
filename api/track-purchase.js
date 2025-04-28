@@ -47,18 +47,18 @@ module.exports = async (req, res) => {
     
     const purchases = await loadPurchases();
     
-    // Optional: Add query parameters to filter purchases
-    const { processed } = req.query;
-    
-    let filteredPurchases = purchases;
-    
-    // Filter by processed status if specified
-    if (processed !== undefined) {
-      const isProcessed = processed === 'true';
-      filteredPurchases = purchases.filter(p => p.processed === isProcessed);
+    // Filter by username if provided
+    if (req.query.username) {
+      const username = req.query.username.toLowerCase();
+      const userPurchases = purchases.filter(p => 
+        p.username.toLowerCase() === username && !p.processed && !p.claimed
+      );
+      return res.status(200).json(userPurchases);
     }
     
-    return res.status(200).json(filteredPurchases);
+    // By default, only return unprocessed and unclaimed purchases for the plugin
+    const unprocessedPurchases = purchases.filter(p => !p.processed && !p.claimed);
+    return res.status(200).json(unprocessedPurchases);
   }
   
   // POST request to add a new purchase (from the website)
@@ -79,7 +79,8 @@ module.exports = async (req, res) => {
       price: price || 0,
       item: item || rank, // Default item to rank if not specified
       purchaseDate: new Date().toISOString(),
-      processed: false
+      processed: false,
+      claimed: false
     };
     
     purchases.push(newPurchase);
@@ -91,7 +92,7 @@ module.exports = async (req, res) => {
     }
   }
   
-  // PUT request to mark a purchase as processed (for the plugin to update)
+  // PUT request to mark purchases as processed (for the plugin to update)
   if (req.method === 'PUT') {
     // Check for API key
     const apiKey = req.headers['x-api-key'];
@@ -99,27 +100,36 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     
-    const { id } = req.body;
+    const { ids } = req.body;
     
-    if (!id) {
-      return res.status(400).json({ error: 'Missing purchase ID' });
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Missing or invalid purchase IDs' });
     }
     
     const purchases = await loadPurchases();
-    const purchaseIndex = purchases.findIndex(p => p.id === id);
+    let updatedCount = 0;
     
-    if (purchaseIndex === -1) {
-      return res.status(404).json({ error: 'Purchase not found' });
+    // Mark each purchase as processed
+    for (let i = 0; i < purchases.length; i++) {
+      if (ids.includes(purchases[i].id)) {
+        purchases[i].processed = true;
+        purchases[i].claimed = true;
+        purchases[i].processedDate = new Date().toISOString();
+        updatedCount++;
+      }
     }
     
-    // Mark as processed
-    purchases[purchaseIndex].processed = true;
-    purchases[purchaseIndex].processedDate = new Date().toISOString();
+    if (updatedCount === 0) {
+      return res.status(404).json({ error: 'No matching purchases found' });
+    }
     
     if (await savePurchases(purchases)) {
-      return res.status(200).json(purchases[purchaseIndex]);
+      return res.status(200).json({
+        success: true,
+        message: `Successfully marked ${updatedCount} purchases as processed`
+      });
     } else {
-      return res.status(500).json({ error: 'Failed to update purchase' });
+      return res.status(500).json({ error: 'Failed to update purchases' });
     }
   }
   

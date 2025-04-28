@@ -85,13 +85,27 @@ function sendHtml(res, purchases) {
         <td>${p.item || p.rank}</td>
         <td>${formatDate(p.purchaseDate)}</td>
         <td>
-          <span class="status ${p.processed ? 'processed' : 'pending'}">
-            ${p.processed ? 'Claimed' : 'Pending'}
+          <span class="status ${getStatusClass(p)}">
+            ${getStatusText(p)}
           </span>
           ${p.processedDate ? `<br><small>${formatDate(p.processedDate)}</small>` : ''}
         </td>
       </tr>
     `).join('');
+  };
+  
+  // Get status class based on processed and claimed flags
+  const getStatusClass = (purchase) => {
+    if (purchase.claimed) return 'claimed';
+    if (purchase.processed) return 'processed';
+    return 'pending';
+  };
+  
+  // Get status text based on processed and claimed flags
+  const getStatusText = (purchase) => {
+    if (purchase.claimed) return 'Claimed';
+    if (purchase.processed) return 'Processed';
+    return 'Pending';
   };
   
   // Send the HTML response
@@ -147,6 +161,10 @@ function sendHtml(res, purchases) {
           background-color: #1e3a1e;
           color: #4CAF50;
         }
+        .claimed {
+          background-color: #1e3a3a;
+          color: #00BCD4;
+        }
         .pending {
           background-color: #3a331e;
           color: #FFC107;
@@ -171,8 +189,9 @@ function sendHtml(res, purchases) {
       
       <div class="summary">
         <p><strong>Total Purchases:</strong> ${purchases.length}</p>
-        <p><strong>Pending:</strong> ${purchases.filter(p => !p.processed).length}</p>
-        <p><strong>Claimed:</strong> ${purchases.filter(p => p.processed).length}</p>
+        <p><strong>Pending:</strong> ${purchases.filter(p => !p.processed && !p.claimed).length}</p>
+        <p><strong>Processed:</strong> ${purchases.filter(p => p.processed && !p.claimed).length}</p>
+        <p><strong>Claimed:</strong> ${purchases.filter(p => p.claimed).length}</p>
       </div>
       
       <button class="refresh" onclick="window.location.reload()">Refresh</button>
